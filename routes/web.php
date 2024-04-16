@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\UserController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
@@ -12,11 +13,20 @@ Route::get('/register', [LoginController::class, 'showRegisterForm'])->name('reg
 Route::post('/register', [LoginController::class, 'register']);
 
 Route::middleware('auth')->group(function () {
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
     Route::get('/', function () {
-        return view('pages.user.index');
+        if(auth()->user()->is_admin === 1) {
+            return redirect()->route('users.index');
+        }else{
+            return redirect()->route('users.profile');
+        }
     });
+
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    //User routes
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('users/profile', [UserController::class, 'profile'])->name('users.profile');
     Route::get('users/change-password', [UserController::class, 'showChangePassword'])->name('users.change-password');
     Route::post('users/change-password', [UserController::class, 'changePassword']);
-    Route::resource('users', UserController::class)->only(['index', 'show', 'update']);
 });

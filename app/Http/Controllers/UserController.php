@@ -23,13 +23,13 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the users profile.
      */
-    public function show(User $user)
+    public function profile(Request $request)
     {
-        abort_unless(auth()->id() === $user->id, '419', 'Unauthorized');
+        $user = $request->user();
         $user->load('userInfo:user_id,address,phone,dob,nid');
-        return view('pages.user.show', compact('user'));
+        return view('pages.user.profile', compact('user'));
     }
 
     /**

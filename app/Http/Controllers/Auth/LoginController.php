@@ -38,7 +38,11 @@ class LoginController extends Controller implements HasMiddleware
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('/')->with('success', 'Login successfully.');
+            if(auth()->user()->is_admin === 1) {
+                return redirect()->route('users.index');
+            }else{
+                return redirect()->route('users.profile');
+            }
         }
 
         return back()->withErrors([
