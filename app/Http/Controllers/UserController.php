@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangePasswordRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -42,14 +43,8 @@ class UserController extends Controller
     /**
      * Show change user password form.
      */
-    public function changePassword(Request $request)
+    public function changePassword(ChangePasswordRequest $request)
     {
-        $request->validate([
-            'old_password' => 'required|string',
-            'new_password' => 'required|string',
-            'confirm_password' => 'required|string',
-        ]);
-
         $user = $request->user();
         $data = $request->only('old_password', 'new_password', 'confirm_password');
 

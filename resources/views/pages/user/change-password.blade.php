@@ -69,8 +69,7 @@
                 clearForm();
                 $('#errors').addClass('d-none');
             }).catch(function (err) {
-                clearForm();
-                if(err?.responseJSON?.message){
+                if(err?.responseJSON?.success === false){
                     return $('#errors').html(err?.responseJSON?.message).removeClass('d-none');
                 }
                 let errors = err.responseJSON.errors;
