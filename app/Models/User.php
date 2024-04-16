@@ -58,6 +58,17 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
+     * Global search scope.
+     */
+
+    public function scopeSearch($query)
+    {
+        return empty(request()->search) ? $query : $query->where('first_name', 'like', '%' . request()->search . '%')
+            ->orWhere('last_name', 'like', '%' . request()->search . '%')
+            ->orWhere('email', 'like', '%' . request()->search . '%');
+    }
+
+    /**
      * Get the user's full name.
      */
     protected function fullName(): Attribute

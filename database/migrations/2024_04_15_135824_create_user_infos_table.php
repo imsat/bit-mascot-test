@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('address');
             $table->string('phone');
             $table->date('dob');
-            $table->string('nid');
+            $table->string('nid')->nullable();
             $table->timestamps();
         });
     }

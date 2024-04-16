@@ -10,17 +10,14 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $users = User::with('userInfo:user_id,address,phone,dob,nid')
+            ->select(['id', 'first_name', 'last_name', 'email'])
+            ->search()
+            ->latest()
+            ->paginate();
+        return view ('pages.user.index', compact('users'));
     }
 
     /**
@@ -56,9 +53,9 @@ class UserController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Show change user password form.
      */
-    public function destroy(User $user)
+    public function showChangePassword(Request $request)
     {
         //
     }

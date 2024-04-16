@@ -14,8 +14,9 @@ Route::post('/register', [LoginController::class, 'register']);
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('/', function () {
-        return view('pages.profile.index');
+        return view('pages.user.index');
     });
-    Route::get('users/change-password', [UserController::class, 'profile'])->name('users.change-password');
-    Route::resource('users', UserController::class)->only(['index', 'update']);
+    Route::get('users/change-password', [UserController::class, 'showChangePassword'])->name('users.change-password');
+    Route::post('users/change-password', [UserController::class, 'changePassword']);
+    Route::resource('users', UserController::class)->only(['index', 'show', 'update']);
 });

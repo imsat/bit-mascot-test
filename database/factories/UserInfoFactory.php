@@ -21,7 +21,7 @@ class UserInfoFactory extends Factory
             'address' => fake()->address(),
             'phone' => fake()->phoneNumber(),
             'dob' => fake()->date(),
-            'nid' => 'https://picsum.photos/id/20/575/350',
+//            'nid' => 'https://picsum.photos/id/20/575/350',
         ];
     }
 }
