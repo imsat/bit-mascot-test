@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@push('title', 'User Profile')
+@push('title', 'User List')
 @section('content')
     <div class="pt-3 pb-2 mb-3 border-bottom">
         <h2 class="d-inline-block">User List</h2>

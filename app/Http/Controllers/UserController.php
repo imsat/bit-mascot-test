@@ -10,22 +10,14 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
         $users = User::with('userInfo:user_id,address,phone,dob,nid')
             ->select(['id', 'first_name', 'last_name', 'email'])
             ->search()
             ->latest()
             ->paginate();
-        return view ('pages.user.index', compact('users'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        return view('pages.user.index', compact('users'));
     }
 
     /**
@@ -33,30 +25,15 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
-    {
-        //
+        $user->load('userInfo:user_id,address,phone,dob,nid');
+        return view('pages.user.show', compact('user'));
     }
 
     /**
      * Show change user password form.
      */
-    public function showChangePassword(Request $request)
+    public function showChangePassword()
     {
-        //
+        return view('pages.user.change-password');
     }
 }
