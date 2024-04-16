@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +20,7 @@ class LoginController extends Controller implements HasMiddleware
             new Middleware('guest', except: ['logout']),
         ];
     }
+
     /**
      * Show the application's login form.
      *
@@ -36,7 +38,7 @@ class LoginController extends Controller implements HasMiddleware
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('dashboard');
+            return redirect()->intended('/')->with('success', 'Login successfully.');
         }
 
         return back()->withErrors([
@@ -44,9 +46,10 @@ class LoginController extends Controller implements HasMiddleware
         ])->onlyInput('email');
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         auth()->logout();
+        $request->session()->flush();
         return redirect()->back()->with('success', 'Logout successfully.');
     }
 }

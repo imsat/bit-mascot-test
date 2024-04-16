@@ -4,10 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@stack('title', 'Bit Mascot Test')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{{asset('/assets/css/app.css')}}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.min.css"
+          integrity="sha256-h2Gkn+H33lnKlQTNntQyLXMWq7/9XI2rlPCsLsVcUBs=" crossorigin="anonymous">
+    @stack('style')
 </head>
 
 <body>
@@ -20,194 +24,45 @@
 
         <!-- Page Content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div class="pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Dashboard</h1>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <h2>Section title</h2>
-                    <p>This is a simple Bootstrap 5 admin template with a fixed sidebar and a navbar.</p>
-                </div>
-            </div>
+            @yield('content')
         </main>
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.all.min.js"
+        integrity="sha256-O11zcGEd6w4SQFlm8i/Uk5VAB+EhNNmynVLznwS6TJ4=" crossorigin="anonymous"></script>
+<script type="module">
+    $(document).ready(function () {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $(document)
+        /* Sweetalert 2 toast  */
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+        window.Toast = Toast;
+        @if(Session::has('success'))
+        Toast.fire({icon: 'success', title: `{{Session::get('success')}}`});
+        @elseif(Session::has('warning'))
+        Toast.fire({icon: 'warning', title: `{{Session::get('warning')}}`});
+        @elseif(Session::has('error'))
+        Toast.fire({icon: 'error', title: `{{Session::get('error')}}`});
+        @elseif(Session::has('info'))
+        Toast.fire({icon: 'info', title: `{{Session::get('info')}}`});
+        @elseif(Session::has('failed'))
+        Toast.fire({icon: 'error', title: `{{Session::get('failed')}}`});
+        @endif
+    });
+</script>
+@stack('script')
 </body>
-
 </html>
-
-
-
-
-
-{{--<!doctype html>--}}
-{{--<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">--}}
-{{--<head>--}}
-{{--    <meta charset="UTF-8">--}}
-{{--    <meta name="viewport"--}}
-{{--          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">--}}
-{{--    <meta http-equiv="X-UA-Compatible" content="ie=edge">--}}
-{{--    <title>@stack('title', 'Bit Mascot Test')</title>--}}
-{{--    --}}{{--Boottrap --}}
-{{--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">--}}
-{{--    --}}{{--Boottrap Icon --}}
-{{--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">--}}
-
-{{--    --}}{{--Custom style --}}
-{{--    <link rel="stylesheet" href="{{asset('/assets/css/app.css')}}">--}}
-{{--</head>--}}
-{{--<body>--}}
-{{--@include('layouts.includes.navbar')--}}
-
-{{--<div class="container-fluid">--}}
-{{--    <div class="row">--}}
-{{--        @include('layouts.includes.sidebar')--}}
-
-{{--        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">--}}
-{{--            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">--}}
-{{--                <h1 class="h2">Dashboard</h1>--}}
-{{--                <div class="btn-toolbar mb-2 mb-md-0">--}}
-{{--                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1">--}}
-{{--                        <svg class="bi"><use xlink:href="#calendar3"/></svg>--}}
-{{--                        This week--}}
-{{--                    </button>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--            <div class="table-responsive small">--}}
-{{--                <table class="table table-striped table-sm">--}}
-{{--                    <thead>--}}
-{{--                    <tr>--}}
-{{--                        <th scope="col">#</th>--}}
-{{--                        <th scope="col">Header</th>--}}
-{{--                        <th scope="col">Header</th>--}}
-{{--                        <th scope="col">Header</th>--}}
-{{--                        <th scope="col">Header</th>--}}
-{{--                    </tr>--}}
-{{--                    </thead>--}}
-{{--                    <tbody>--}}
-{{--                    <tr>--}}
-{{--                        <td>1,001</td>--}}
-{{--                        <td>random</td>--}}
-{{--                        <td>data</td>--}}
-{{--                        <td>placeholder</td>--}}
-{{--                        <td>text</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td>1,002</td>--}}
-{{--                        <td>placeholder</td>--}}
-{{--                        <td>irrelevant</td>--}}
-{{--                        <td>visual</td>--}}
-{{--                        <td>layout</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td>1,003</td>--}}
-{{--                        <td>data</td>--}}
-{{--                        <td>rich</td>--}}
-{{--                        <td>dashboard</td>--}}
-{{--                        <td>tabular</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td>1,003</td>--}}
-{{--                        <td>information</td>--}}
-{{--                        <td>placeholder</td>--}}
-{{--                        <td>illustrative</td>--}}
-{{--                        <td>data</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td>1,004</td>--}}
-{{--                        <td>text</td>--}}
-{{--                        <td>random</td>--}}
-{{--                        <td>layout</td>--}}
-{{--                        <td>dashboard</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td>1,005</td>--}}
-{{--                        <td>dashboard</td>--}}
-{{--                        <td>irrelevant</td>--}}
-{{--                        <td>text</td>--}}
-{{--                        <td>placeholder</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td>1,006</td>--}}
-{{--                        <td>dashboard</td>--}}
-{{--                        <td>illustrative</td>--}}
-{{--                        <td>rich</td>--}}
-{{--                        <td>data</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td>1,007</td>--}}
-{{--                        <td>placeholder</td>--}}
-{{--                        <td>tabular</td>--}}
-{{--                        <td>information</td>--}}
-{{--                        <td>irrelevant</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td>1,008</td>--}}
-{{--                        <td>random</td>--}}
-{{--                        <td>data</td>--}}
-{{--                        <td>placeholder</td>--}}
-{{--                        <td>text</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td>1,009</td>--}}
-{{--                        <td>placeholder</td>--}}
-{{--                        <td>irrelevant</td>--}}
-{{--                        <td>visual</td>--}}
-{{--                        <td>layout</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td>1,010</td>--}}
-{{--                        <td>data</td>--}}
-{{--                        <td>rich</td>--}}
-{{--                        <td>dashboard</td>--}}
-{{--                        <td>tabular</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td>1,011</td>--}}
-{{--                        <td>information</td>--}}
-{{--                        <td>placeholder</td>--}}
-{{--                        <td>illustrative</td>--}}
-{{--                        <td>data</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td>1,012</td>--}}
-{{--                        <td>text</td>--}}
-{{--                        <td>placeholder</td>--}}
-{{--                        <td>layout</td>--}}
-{{--                        <td>dashboard</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td>1,013</td>--}}
-{{--                        <td>dashboard</td>--}}
-{{--                        <td>irrelevant</td>--}}
-{{--                        <td>text</td>--}}
-{{--                        <td>visual</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td>1,014</td>--}}
-{{--                        <td>dashboard</td>--}}
-{{--                        <td>illustrative</td>--}}
-{{--                        <td>rich</td>--}}
-{{--                        <td>data</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td>1,015</td>--}}
-{{--                        <td>random</td>--}}
-{{--                        <td>tabular</td>--}}
-{{--                        <td>information</td>--}}
-{{--                        <td>text</td>--}}
-{{--                    </tr>--}}
-{{--                    </tbody>--}}
-{{--                </table>--}}
-{{--            </div>--}}
-{{--        </main>--}}
-{{--    </div>--}}
-{{--</div>--}}
-
-{{--<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>--}}
-{{--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>--}}
-{{--</body>--}}
-{{--</html>--}}
