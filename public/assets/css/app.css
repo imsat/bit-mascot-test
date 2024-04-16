@@ -1,0 +1,32 @@
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 56px;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Adjust main content area to accommodate fixed sidebar */
+@media (min-width: 768px) {
+    .sidebar {
+        width: 227px;
+    }
+
+    .sidebar .nav-link {
+        padding: 10px 15px;
+    }
+
+    .main-content {
+        margin-left: 227px; /* Same width as sidebar */
+    }
+}
+
+/* Active Sidebar Item */
+.sidebar .nav-item .active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
