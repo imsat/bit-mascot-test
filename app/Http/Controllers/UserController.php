@@ -61,18 +61,14 @@ class UserController extends Controller
     {
         // Check user
         abort_unless(Gate::allows('user'), 403);
-
-        $user = $request->user();
-        $data = $request->only('old_password', 'new_password', 'confirm_password');
-
-        if (Hash::check($data['old_password'], $user->password)) {
-            $user->update([
-                'password' => Hash::make($data['confirm_password']),
-            ]);
-            return response()->json(['message' => 'Password changed successfully.', 'success' => true]);
+        try {
+            $updatePassword = $this->userService->updatePassword($request);
+            if ($updatePassword) {
+                return response()->json(['message' => 'Password changed successfully.', 'success' => true]);
+            }
+            return response()->json(['message' => 'Password mismatch!', 'success' => false], 406);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('failed', $e->getMessage() ?? 'Something went wrong!');
         }
-
-        return response()->json(['message' => 'Password mismatch!', 'success' => false], 406);
-
     }
 }

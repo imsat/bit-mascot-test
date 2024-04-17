@@ -13,8 +13,10 @@
                          {{auth()->user()->full_name}}
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        @can('user')
                         <li><a class="dropdown-item small" href="{{route('users.change-password')}}">Change Password</a></li>
                         <li><hr class="dropdown-divider"></li>
+                        @endcan
                         <li>
                             <a class="dropdown-item small"
                                href="{{ route('logout') }}"

@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Services\Service;
+use Illuminate\Support\Facades\Hash;
 
 class UserService extends Service
 {
@@ -34,16 +35,19 @@ class UserService extends Service
     }
 
     /**
-     * Trash user.
-     *
-     * @param $user
-     * @return true
+     * Update user password.
      */
-    public function delete($user)
+    public function updatePassword($request)
     {
-        // Soft delete a user.
-        $user->delete();
-        return true;
+        $user = $request->user();
+        $data = $request->only('old_password', 'new_password', 'confirm_password');
+        if (Hash::check($data['old_password'], $user->password)) {
+            $user->update([
+                'password' => Hash::make($data['confirm_password']),
+            ]);
+            return true;
+        }
+        return false;
     }
 
 }

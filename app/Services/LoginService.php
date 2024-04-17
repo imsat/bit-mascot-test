@@ -11,6 +11,10 @@ class LoginService extends Service
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            if (!$request->user()->isAdmin()) {
+                // Send email
+                EmailVerificationService::sendMail($request->user());
+            }
             return true;
         }
         return false;

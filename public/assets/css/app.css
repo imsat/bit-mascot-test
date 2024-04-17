@@ -30,3 +30,8 @@
     color: #fff;
     border-color: #007bff;
 }
+
+.required:after {
+    content: " *" !important;
+    color: red !important;
+}

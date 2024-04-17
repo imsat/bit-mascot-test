@@ -36,7 +36,7 @@ class LoginController extends Controller implements HasMiddleware
      */
     public function showLoginForm()
     {
-        return view('auth.login');
+        return view('pages.auth.login');
     }
 
     public function login(LoginRequest $request)
@@ -44,10 +44,10 @@ class LoginController extends Controller implements HasMiddleware
         try {
             $isLogin = $this->loginService->authenticate($request);
             if ($isLogin) {
-                if (auth()->user()->is_admin === 1) {
-                    return redirect()->route('users.index');
+                if ($request->user()->isAdmin()) {
+                    return redirect()->route('users.index')->with('success', 'Login successful');
                 }
-                return redirect()->route('users.profile');
+                return redirect()->route('email-verification');
             }
 
             return back()->withErrors([

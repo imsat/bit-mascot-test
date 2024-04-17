@@ -9,19 +9,19 @@
         <div class="w-50">
             <div class="alert alert-danger d-none" id="errors"></div>
             <div class="mb-3 row">
-                <label for="old_password" class="col-sm-4 col-form-label">Old Password</label>
+                <label for="old_password" class="col-sm-4 col-form-label required">Old Password</label>
                 <div class="col-sm-8">
                     <input type="password" class="form-control" id="old_password" placeholder="Old password">
                 </div>
             </div>
             <div class="mb-3 row">
-                <label for="new_password" class="col-sm-4 col-form-label">New Password</label>
+                <label for="new_password" class="col-sm-4 col-form-label required">New Password</label>
                 <div class="col-sm-8">
                     <input type="password" class="form-control" id="new_password" placeholder="New password">
                 </div>
             </div>
             <div class="mb-3 row">
-                <label for="confirm_password" class="col-sm-4 col-form-label">Confirm Password</label>
+                <label for="confirm_password" class="col-sm-4 col-form-label required">Confirm Password</label>
                 <div class="col-sm-8">
                     <input type="password" class="form-control" id="confirm_password" placeholder="Confirm password">
                 </div>
