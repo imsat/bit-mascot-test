@@ -14,8 +14,8 @@ Route::post('/register', [LoginController::class, 'register']);
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/', function () {
-        if(auth()->user()->is_admin === 1) {
+    Route::get('/', function (Request $request) {
+        if($request->user()->isAdmin()) {
             return redirect()->route('users.index');
         }else{
             return redirect()->route('users.profile');
@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
     //User routes
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users', [UserController::class, 'index'])->name('users.index')->middleware('admin');
     Route::get('users/profile', [UserController::class, 'profile'])->name('users.profile');
     Route::get('users/change-password', [UserController::class, 'showChangePassword'])->name('users.change-password');
     Route::post('users/change-password', [UserController::class, 'changePassword']);

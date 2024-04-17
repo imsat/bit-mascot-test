@@ -3,23 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ChangePasswordRequest;
-use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $users = User::with('userInfo:user_id,address,phone,dob,nid')
-            ->select(['id', 'first_name', 'last_name', 'email'])
-            ->search()
-            ->latest()
-            ->paginate();
-        return view('pages.user.index', compact('users'));
+        // Check admin
+        abort_unless(Gate::allows('admin'), 403);
+        try {
+            $users = $this->userService->userList();
+            return view('pages.user.index', compact('users'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('failed', $e->getMessage() ?? 'Something went wrong!');
+        }
     }
 
     /**
@@ -27,6 +37,8 @@ class UserController extends Controller
      */
     public function profile(Request $request)
     {
+        // Check user
+        abort_unless(Gate::allows('user'), 403);
         $user = $request->user();
         $user->load('userInfo:user_id,address,phone,dob,nid');
         return view('pages.user.profile', compact('user'));
@@ -37,6 +49,8 @@ class UserController extends Controller
      */
     public function showChangePassword()
     {
+        // Check user
+        abort_unless(Gate::allows('user'), 403);
         return view('pages.user.change-password');
     }
 
@@ -45,6 +59,9 @@ class UserController extends Controller
      */
     public function changePassword(ChangePasswordRequest $request)
     {
+        // Check user
+        abort_unless(Gate::allows('user'), 403);
+
         $user = $request->user();
         $data = $request->only('old_password', 'new_password', 'confirm_password');
 

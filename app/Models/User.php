@@ -78,8 +78,19 @@ class User extends Authenticatable implements MustVerifyEmail
         );
     }
 
+    /**
+     * Has one relationship between user and userinfo.
+     */
     public function userInfo()
     {
         return $this->hasOne(UserInfo::class);
+    }
+
+    /**
+     * Check user is admin.
+     */
+    public function isAdmin()
+    {
+        return !!$this->is_admin;
     }
 }

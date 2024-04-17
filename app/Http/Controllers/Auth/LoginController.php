@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Services\LoginService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -11,6 +12,13 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller implements HasMiddleware
 {
+    protected $loginService;
+
+    public function __construct(LoginService $loginService)
+    {
+        $this->loginService = $loginService;
+    }
+
     /**
      * Get the middleware that should be assigned to the controller.
      */
@@ -33,27 +41,30 @@ class LoginController extends Controller implements HasMiddleware
 
     public function login(LoginRequest $request)
     {
-        $credentials = $request->only('email', 'password');
-
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            if(auth()->user()->is_admin === 1) {
-                return redirect()->route('users.index');
-            }else{
+        try {
+            $isLogin = $this->loginService->authenticate($request);
+            if ($isLogin) {
+                if (auth()->user()->is_admin === 1) {
+                    return redirect()->route('users.index');
+                }
                 return redirect()->route('users.profile');
             }
-        }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+            return back()->withErrors([
+                'email' => 'The provided credentials do not match our records.',
+            ])->onlyInput('email');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('failed', $e->getMessage() ?? 'Something went wrong!');
+        }
     }
 
     public function logout(Request $request)
     {
-        auth()->logout();
-        $request->session()->flush();
-        return redirect()->back()->with('success', 'Logout successfully.');
+        try {
+            $this->loginService->logout($request);
+            return redirect()->back()->with('success', 'Logout successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('failed', $e->getMessage() ?? 'Something went wrong!');
+        }
     }
 }
