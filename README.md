@@ -13,7 +13,7 @@ This project combines Laravel as the backend framework with bootstrap + jQuery f
 1. **Clone the repository:**
 
    ```bash
-   https://github.com/imsat/bit-muscot-test.git
+   https://github.com/imsat/bit-mascot-test.git
 
 2. **Install Laravel dependencies:**
 
