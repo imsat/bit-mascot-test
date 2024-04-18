@@ -14,14 +14,16 @@
                     <div class="row mb-3">
                         <div class="col">
                             <label for="first_name" class="form-label required">First Name</label>
-                            <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First name">
+                            <input type="text" class="form-control" name="first_name" id="first_name"
+                                   placeholder="First name">
                             @error('first_name')
                             <span class="text-danger d-inline-block">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="col">
                             <label for="last_name" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Last name">
+                            <input type="text" class="form-control" name="last_name" id="last_name"
+                                   placeholder="Last name">
                             @error('last_name')
                             <span class="text-danger d-inline-block">{{ $message }}</span>
                             @enderror
@@ -41,15 +43,14 @@
                             <label for="phone" class="form-label required">Phone</label>
                             <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone">
                             @error('phone')
-                            <span class="text-danger d-inline-block">{{ $message }}</span>
+                            <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="col">
                             <label for="email" class="form-label required">Email</label>
                             <input type="email" class="form-control" name="email" id="email" placeholder="Email">
-                            @error('email')
-                            <span class="text-danger d-inline-block">{{ $message }}</span>
-                            @enderror
+                            <span class="text-danger" id="email-error">@error('email'){{ $message }} @enderror</span>
+
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -70,7 +71,8 @@
                     <div class="row mb-3">
                         <div class="col">
                             <label for="password" class="form-label required">Password</label>
-                            <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                            <input type="password" class="form-control" name="password" id="password"
+                                   placeholder="Password">
                             @error('password')
                             <span class="text-danger d-inline-block">{{ $message }}</span>
                             @enderror
@@ -79,7 +81,8 @@
                     <div class="row mb-3">
                         <div class="col">
                             <label for="password_confirmation" class="form-label required">Confirm Password</label>
-                            <input type="password" class="form-control" name="password_confirmation" id="password_confirmation" placeholder="Confirm password">
+                            <input type="password" class="form-control" name="password_confirmation"
+                                   id="password_confirmation" placeholder="Confirm password">
                             @error('password_confirmation')
                             <span class="text-danger d-inline-block">{{ $message }}</span>
                             @enderror
@@ -94,3 +97,48 @@
         </div>
     </div>
 @endsection
+
+@push('script')
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            let timeout;
+            $('#email').on('input', function (e) {
+                clearTimeout(timeout);
+                timeout = setTimeout(function () {
+                    if (isEmail(e.target.value)) {
+                        checkEmail(e.target.value);
+                    }
+                }, 1000);
+            });
+
+        });
+
+        function isEmail(email) {
+            var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            return regex.test(email);
+        }
+
+        async function checkEmail() {
+            await $.ajax({
+                method: 'POST',
+                url: "{{route('check-email-unique')}}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'email': $('#email').val(),
+                }
+            }).done(function (response) {
+                if (response?.success === true) {
+                    console.log(response)
+                    $('#email-error').text('')
+                }
+            }).catch(function (err) {
+                if (err?.responseJSON?.success === false) {
+                    $('#email-error').text(err?.responseJSON?.message?.email[0]);
+                }
+            });
+        }
+    </script>
+@endpush
+

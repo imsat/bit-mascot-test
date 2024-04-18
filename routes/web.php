@@ -17,6 +17,7 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegisterForm')->name('register');
     Route::post('/register', 'register');
 });
+Route::post('/check-email-unique', [RegisterController::class, 'checkEmailUnique'])->name('check-email-unique');
 
 Route::middleware('auth')->group(function () {
 
@@ -34,8 +35,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
     Route::get('/admin', [UserController::class, 'index'])->name('users.index')->middleware('admin');
+
     Route::middleware('verified')->group(function () {
         //User routes
         Route::get('users/profile', [UserController::class, 'profile'])->name('users.profile')->middleware('verified');

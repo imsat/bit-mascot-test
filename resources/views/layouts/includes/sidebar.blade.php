@@ -3,7 +3,7 @@
         <ul class="nav flex-column">
             @can('admin')
                 <li class="nav-item">
-                    <a class="nav-link {{ Request::is('users') ? 'active' : '' }}" href="{{route('users.index')}}">User
+                    <a class="nav-link {{ Request::is('admin') ? 'active' : '' }}" href="{{route('users.index')}}">User
                         List</a>
                 </li>
             @endcan
