@@ -29,7 +29,7 @@ class UserInfo extends Model
     protected function nid(): Attribute
     {
         return Attribute::make(
-            get: fn ($nid) => $nid ?  asset('storage/'.  $nid)  : 'https://picsum.photos/id/20/575/350',
+            get: fn ($nid) => $nid ?  asset('storage'.  $nid)  : 'https://picsum.photos/id/20/575/350',
         );
     }
 }
